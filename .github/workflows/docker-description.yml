@@ -1,0 +1,23 @@
+name: DockerHub Description
+
+on:
+  schedule:
+    - cron: "00 3 * * *"
+  workflow_dispatch:
+
+jobs:
+
+  dockerHubDescription:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v3
+
+    - name: Docker Hub Description
+      uses: peter-evans/dockerhub-description@v3
+      with:
+        username: sigblue
+        password: ${{ secrets.DOCKERHUB_TOKEN }}
+        repository: sigblue/nginx-php
+        short-description: ${{ github.event.repository.description }}
