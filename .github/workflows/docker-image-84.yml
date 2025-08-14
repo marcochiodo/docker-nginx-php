@@ -24,5 +24,7 @@ jobs:
        context: .
        push: true
        tags: sigblue/nginx-php:84
-       build-args: ALPINE_VERSION=3.21
+       build-args:  |
+         ALPINE_VERSION=3.21
+         V=84
 
