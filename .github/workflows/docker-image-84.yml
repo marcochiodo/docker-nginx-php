@@ -1,4 +1,4 @@
-name: Docker Image CI for PHP 8.3
+name: Docker Image CI for PHP 8.4
 
 on:
   schedule:
@@ -23,7 +23,9 @@ jobs:
       with:
        context: .
        push: true
-       tags: sigblue/nginx-php:84
+       tags:   |
+         sigblue/nginx-php:84
+         sigblue/nginx-php:latest
        build-args:  |
          ALPINE_VERSION=3.21
          V=84
