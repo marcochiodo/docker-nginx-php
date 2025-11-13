@@ -1,6 +1,9 @@
 name: DockerHub Description
 
 on:
+  push:
+    branches:
+      - production
   schedule:
     - cron: "00 3 * * *"
   workflow_dispatch:
@@ -13,6 +16,8 @@ jobs:
 
     steps:
     - uses: actions/checkout@v3
+      with:
+        ref: production
 
     - name: Docker Hub Description
       uses: peter-evans/dockerhub-description@v3
