@@ -1,5 +1,34 @@
 #!/usr/bin/env sh
 
+# Function to check if process is still running
+is_running() {
+    kill -0 "$1" 2>/dev/null
+}
+
+# Graceful shutdown handler
+shutdown() {
+    echo "Shutting down gracefully..."
+
+    # Stop nginx first (inverse of startup order)
+    if is_running $NGINX_PID; then
+        echo "Stopping nginx..."
+        kill -QUIT $NGINX_PID 2>/dev/null
+        wait $NGINX_PID 2>/dev/null
+    fi
+
+    # Then stop php-fpm
+    if is_running $PHP_PID; then
+        echo "Stopping php-fpm..."
+        kill -QUIT $PHP_PID 2>/dev/null
+        wait $PHP_PID 2>/dev/null
+    fi
+
+    exit 0
+}
+
+# Trap SIGTERM and SIGINT
+trap shutdown TERM INT
+
 # Start php-fpm in background (force foreground mode)
 php-fpm -F &
 PHP_PID=$!
@@ -26,23 +55,20 @@ NGINX_PID=$!
 
 echo "nginx is ready"
 
-# Function to check if process is still running
-is_running() {
-    kill -0 "$1" 2>/dev/null
-}
-
 # Wait for any process to exit
 while is_running $PHP_PID && is_running $NGINX_PID; do
     sleep 5
 done
 
-# Get exit code of the failed process
+# If we exit the loop, one process died unexpectedly
 if ! is_running $PHP_PID; then
-    echo "php-fpm exited, stopping container..."
-    wait $PHP_PID
-    exit $?
+    echo "php-fpm exited unexpectedly, stopping container..."
+    kill -QUIT $NGINX_PID 2>/dev/null
+    wait $NGINX_PID 2>/dev/null
+    exit 1
 else
-    echo "nginx exited, stopping container..."
-    wait $NGINX_PID
-    exit $?
+    echo "nginx exited unexpectedly, stopping container..."
+    kill -QUIT $PHP_PID 2>/dev/null
+    wait $PHP_PID 2>/dev/null
+    exit 1
 fi
