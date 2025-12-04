@@ -23,15 +23,27 @@ jobs:
       with:
        username: sigblue
        password: ${{ secrets.DOCKERHUB_TOKEN }}
-    - name: Build and push full
+    - name: Build and push with Alpine 3.21
       uses: docker/build-push-action@v3
       with:
        context: .
        push: true
        tags:   |
          sigblue/nginx-php:84
+         sigblue/nginx-php:84-alpine-3.21
          sigblue/nginx-php:latest
        build-args:  |
          ALPINE_VERSION=3.21
+         V=84
+    - name: Build and push with Alpine 3.22
+      uses: docker/build-push-action@v3
+      with:
+       context: .
+       push: true
+       tags:   |
+         sigblue/nginx-php:84-alpine-3.22
+         sigblue/nginx-php:latest
+       build-args:  |
+         ALPINE_VERSION=3.22
          V=84
 

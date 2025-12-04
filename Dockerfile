@@ -1,4 +1,4 @@
-ARG ALPINE_VERSION
+ARG ALPINE_VERSION=3.22
 
 FROM alpine:$ALPINE_VERSION
 
@@ -14,7 +14,7 @@ RUN apk --no-cache add ca-certificates php$V-fpm php$V \
     php$V-apcu php$V-intl php$V-opcache php$V-zip php$V-curl \
     php$V-openssl php$V-phar php$V-mbstring php$V-xml php$V-simplexml php$V-xmlwriter php$V-dom php$V-ctype php$V-iconv \
     php$V-pdo php$V-pdo_sqlite php$V-sqlite3 \
-    php$V-sodium \
+    php$V-sodium php$V-session \
     nginx curl
 
 RUN [ ! -e "/usr/bin/php" ] && ln -s /usr/bin/php$V /usr/bin/php || true
