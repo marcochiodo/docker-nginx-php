@@ -11,11 +11,14 @@ RUN apk update
 
 # Install packages
 RUN apk --no-cache add ca-certificates php$V-fpm php$V \
-    php$V-apcu php$V-intl php$V-opcache php$V-zip php$V-curl \
+    php$V-apcu php$V-intl php$V-zip php$V-curl \
     php$V-openssl php$V-phar php$V-mbstring php$V-xml php$V-simplexml php$V-xmlwriter php$V-dom php$V-ctype php$V-iconv \
     php$V-pdo php$V-pdo_sqlite php$V-sqlite3 \
     php$V-sodium php$V-session \
-    nginx curl
+    nginx curl && \
+    if [ "$V" -lt 85 ]; then \
+        apk --no-cache add php$V-opcache; \
+    fi
 
 RUN [ ! -e "/usr/bin/php" ] && ln -s /usr/bin/php$V /usr/bin/php || true
 RUN [ ! -e "/usr/sbin/php-fpm" ] && ln -s /usr/sbin/php-fpm$V /usr/sbin/php-fpm || true

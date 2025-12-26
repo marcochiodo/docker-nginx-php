@@ -31,7 +31,6 @@ jobs:
        tags:   |
          sigblue/nginx-php:84
          sigblue/nginx-php:84-alpine-3.21
-         sigblue/nginx-php:latest
        build-args:  |
          ALPINE_VERSION=3.21
          V=84
@@ -42,8 +41,17 @@ jobs:
        push: true
        tags:   |
          sigblue/nginx-php:84-alpine-3.22
-         sigblue/nginx-php:latest
        build-args:  |
          ALPINE_VERSION=3.22
+         V=84
+    - name: Build and push with Alpine 3.23
+      uses: docker/build-push-action@v3
+      with:
+       context: .
+       push: true
+       tags:   |
+         sigblue/nginx-php:84-alpine-3.23
+       build-args:  |
+         ALPINE_VERSION=3.23
          V=84
 
