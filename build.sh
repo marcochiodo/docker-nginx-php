@@ -6,7 +6,7 @@ then
 elif test "${1}" = "84";
 then
     docker buildx build --build-arg V=84 --build-arg ALPINE_VERSION=3.21 -t sigblue/nginx-php:84-alpine-3.21 --no-cache .
-    docker tag sigblue/nginx-php:84 sigblue/nginx-php:84
+    docker tag sigblue/nginx-php:84-alpine-3.21 sigblue/nginx-php:84
     docker buildx build --build-arg V=84 --build-arg ALPINE_VERSION=3.22 -t sigblue/nginx-php:84-alpine-3.22 --no-cache .
     docker buildx build --build-arg V=84 --build-arg ALPINE_VERSION=3.23 -t sigblue/nginx-php:84-alpine-3.23 --no-cache .
 elif test "${1}" = "85";
