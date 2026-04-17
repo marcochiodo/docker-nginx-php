@@ -46,11 +46,13 @@ RUN adduser --disabled-password --gecos "" --home "/var/www" --ingroup "www" --n
 RUN mkdir -p /var/www/html
 RUN chown www:www -R /var/www
 
-COPY --chown=www config/entrypoint.sh /etc/entrypoint.sh
-#RUN sed -i "s/php-fpm/php-fpm${V}/g" /etc/entrypoint.sh
-RUN chmod +x /etc/entrypoint.sh
+COPY --chown=www --chmod=0755 bin/entrypoint.sh /usr/local/bin/entrypoint.sh
+COPY --chown=www --chmod=0755 bin/entrypoint-legacy.sh /etc/entrypoint.sh
 
-COPY --chown=www ./composer-installer.sh /var/www/
+COPY --chown=www --chmod=0755 bin/healthcheck.sh /usr/local/bin/healthcheck.sh
+RUN mkdir -p /usr/local/share/healthcheck.d && chown www:www /usr/local/share/healthcheck.d
+
+COPY --chown=www ./bin/composer-installer.sh /var/www/
 
 # Make sure files/folders needed by the processes are accessable when they run under the nobody user
 RUN chown www:www -R /var/www /run /var/lib/nginx /var/log/nginx
@@ -66,7 +68,7 @@ COPY --chown=www src/ /var/www/html/
 #CMD ["/usr/bin/supervisord", "-c", "/etc/supervisor/conf.d/supervisord.conf"]
 
 # Configure a healthcheck to validate that everything is up&running
-HEALTHCHECK --timeout=10s CMD curl --silent --fail http://127.0.0.1:8080/fpm-ping
+HEALTHCHECK --timeout=10s CMD /usr/local/bin/healthcheck.sh
 
 ENTRYPOINT ["/bin/sh"]
-CMD ["/etc/entrypoint.sh"]
+CMD ["/usr/local/bin/entrypoint.sh"]

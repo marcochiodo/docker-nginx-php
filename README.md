@@ -21,6 +21,27 @@ Example:
 apk add php84-gd
 ```
 
+## Layout
+
+Scripts live in `bin/`:
+
+- `bin/entrypoint.sh` → `/usr/local/bin/entrypoint.sh` (container CMD)
+- `bin/entrypoint-legacy.sh` → `/etc/entrypoint.sh` (deprecated shim, prints WARNING and execs new path)
+- `bin/healthcheck.sh` → `/usr/local/bin/healthcheck.sh` (HEALTHCHECK)
+- `bin/composer-installer.sh` → `/var/www/composer-installer.sh`
+
+Config files live in `config/` (`nginx.conf`, `fpm-pool.conf`, `php.ini`).
+
+## Extension points
+
+**Extra healthchecks.** Drop executable `*.sh` files in `/usr/local/share/healthcheck.d/`. `healthcheck.sh` runs the base `fpm-ping` probe then executes every script; any non-zero exit marks the container unhealthy.
+
+```Dockerfile
+COPY --chown=www --chmod=0755 my-check.sh /usr/local/share/healthcheck.d/my-check.sh
+```
+
+**Custom entrypoint.** Override `CMD` with your own script that performs setup, then `exec /usr/local/bin/entrypoint.sh "$@"` to start php-fpm + nginx.
+
 ## Runtime
 
 ```bash
