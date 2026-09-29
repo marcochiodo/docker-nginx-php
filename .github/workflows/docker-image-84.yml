@@ -15,16 +15,16 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v7
       with:
         ref: master
     - name: Login to Docker Hub
-      uses: docker/login-action@v2
+      uses: docker/login-action@v4
       with:
        username: sigblue
        password: ${{ secrets.DOCKERHUB_TOKEN }}
     - name: Build and push with Alpine 3.21
-      uses: docker/build-push-action@v3
+      uses: docker/build-push-action@v7
       with:
        context: .
        push: true
@@ -35,7 +35,7 @@ jobs:
          ALPINE_VERSION=3.21
          V=84
     - name: Build and push with Alpine 3.22
-      uses: docker/build-push-action@v3
+      uses: docker/build-push-action@v7
       with:
        context: .
        push: true
@@ -45,7 +45,7 @@ jobs:
          ALPINE_VERSION=3.22
          V=84
     - name: Build and push with Alpine 3.23
-      uses: docker/build-push-action@v3
+      uses: docker/build-push-action@v7
       with:
        context: .
        push: true
