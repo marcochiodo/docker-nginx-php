@@ -12,8 +12,9 @@ then
 elif test "${1}" = "85";
 then
     docker buildx build --build-arg V=85 --build-arg ALPINE_VERSION=3.23 -t sigblue/nginx-php:85-alpine-3.23 --no-cache .
-    docker tag sigblue/nginx-php:85-alpine-3.23 sigblue/nginx-php:85
-    docker tag sigblue/nginx-php:85-alpine-3.23 sigblue/nginx-php:latest
+    docker buildx build --build-arg V=85 --build-arg ALPINE_VERSION=3.24 -t sigblue/nginx-php:85-alpine-3.24 --no-cache .
+    docker tag sigblue/nginx-php:85-alpine-3.24 sigblue/nginx-php:85
+    docker tag sigblue/nginx-php:85-alpine-3.24 sigblue/nginx-php:latest
 
 else
     echo "Error: PHP version not valid";
