@@ -8,6 +8,7 @@ Developed by [Marco Chiodo](https://www.marcochiodo.it/) 🇮🇹 | [Swiss Divis
 ## About
 
 Based on Alpine image.  
+Images are published for `linux/amd64` and `linux/arm64`.
 Many extensions are already installed - see Dockerfile at `#Install packages`.  
 Install extra extensions with:
 
@@ -31,6 +32,16 @@ Scripts live in `bin/`:
 - `bin/composer-installer.sh` → `/var/www/composer-installer.sh`
 
 Config files live in `config/` (`nginx.conf`, `fpm-pool.conf`, `php.ini`).
+
+## Build
+
+Images are built and published to Docker Hub only by GitHub Actions, never with a
+manual `docker push`. Docker Hub does not merge architectures: a tag is an index
+linking the amd64 and arm64 versions, created by buildx only when building with
+`--platform linux/amd64,linux/arm64 --push`. A manual push of a locally built
+image would replace that index with the local version only, and ARM users would
+silently get the wrong image again. `build.sh` is for local testing only and
+does not publish anything.
 
 ## Extension points
 
